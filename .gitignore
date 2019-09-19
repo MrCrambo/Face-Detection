@@ -124,3 +124,16 @@ dmypy.json
 .DS_Store
 *.jpeg
 *.jpg
+*.json
+*.dat
+server/android_server/pyvenv.cfg
+server/android_server/bin/python3
+server/android_server/bin/python
+server/android_server/bin/pip3.7
+server/android_server/bin/pip3
+server/android_server/bin/pip
+server/android_server/bin/easy_install-3.7
+server/android_server/bin/easy_install
+server/android_server/bin/activate.fish
+server/android_server/bin/activate.csh
+server/android_server/bin/activate
