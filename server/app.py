@@ -19,7 +19,7 @@ descriptors = []
 return_value = "Service can not detect face!"
 
 def load_from_json():
-    with open('data2.json', 'r') as json_file:
+    with open('data.json', 'r') as json_file:
         data = json.load(json_file)
         for p in data['actors']:
             actors_array.append(p)
@@ -29,7 +29,6 @@ def load_from_json():
 
 def find_descriptor(image):
     dets = detector(image, 1)
-    print(dets)
     
     for k, d in enumerate(dets):
         shape = sp(image, d)
@@ -48,13 +47,8 @@ def handle_request():
     files_ids = list(flask.request.files)
 
     imagefile = flask.request.files[files_ids[0]]
-    # filename = werkzeug.utils.secure_filename(imagefile.filename)
-    # print("Image Filename : " + imagefile.filename)
-    # imagefile.save(filename)
-
+    img = imread(imagefile)
     try:
-        img = imread(imagefile)
-        #img = rotate(img, 270)
         descr = find_descriptor(img)
     except Exception as e:
         return return_value
@@ -63,7 +57,4 @@ def handle_request():
 
 if __name__ == '__main__':
     load_from_json()
-
-    print(actors_array[6715][0])
-
     app.run(host="0.0.0.0", debug=True)
