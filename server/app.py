@@ -39,7 +39,7 @@ def find_face(descriptor):
     tree = KDTree(descriptors)
     answers = tree.query(descriptor, k=2)
 
-    return actors_array[answers[1][0]][0]
+    return {"code": "ok", "name": actors_array[answers[1][0]][0], "link": actors_array[answers[1][0]][1], "score": str(answers[0][0])}
     
 
 @app.route('/predict', methods = ['GET', 'POST'])
@@ -47,11 +47,14 @@ def handle_request():
     files_ids = list(flask.request.files)
 
     imagefile = flask.request.files[files_ids[0]]
-    img = imread(imagefile)
+    filename = werkzeug.utils.secure_filename(imagefile.filename)
+    print("Image Filename : " + imagefile.filename)
+    imagefile.save(filename)
+    img = imread(filename)
     try:
         descr = find_descriptor(img)
     except Exception as e:
-        return return_value
+        return {"code": "error", "name":'error', "link": 'error', "score": "0"}
 
     return find_face(descr)
 
