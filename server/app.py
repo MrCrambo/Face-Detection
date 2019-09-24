@@ -19,7 +19,7 @@ descriptors = []
 return_value = "Service can not detect face!"
 
 def load_from_json():
-    with open('data.json', 'r') as json_file:
+    with open('data2.json', 'r') as json_file:
         data = json.load(json_file)
         for p in data['actors']:
             actors_array.append(p)
@@ -37,9 +37,17 @@ def find_descriptor(image):
 
 def find_face(descriptor):
     tree = KDTree(descriptors)
-    answers = tree.query(descriptor, k=2)
+    answers = tree.query(descriptor, k=1)
+    score = 0.0
+    if answers[0] < 0.6:
+        score = 0.1 + (0.6 - answers[0]) / 0.6 * 0.9
+    else:
+        score = 0.1 - (answers[0] - 0.6) / 1
 
-    return {"code": "ok", "name": actors_array[answers[1][0]][0], "link": actors_array[answers[1][0]][1], "score": str(answers[0][0])}
+    if score < 0:
+        score = 0.01
+
+    return {"code": "ok", "name": actors_array[answers[1]][0].replace('\n', '').strip(' '), "link": actors_array[answers[1]][1], "score": "{:.2f}".format(score)}
     
 
 @app.route('/predict', methods = ['GET', 'POST'])
